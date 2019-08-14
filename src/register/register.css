@@ -1,0 +1,32 @@
+.inner-container {
+    transition: visibility 0.2s ease-out;
+}
+.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.inner-container {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.header {
+    text-align: center;
+    padding: 5px;
+    margin-bottom: 17px;
+    /* margin-left: 35px; */
+    /* margin-right: 35px; */
+    font-family: Ozxgen, sans-serif;
+    font-size: 22px;
+    border-bottom: 2px solid lightblue;
+}
