@@ -20,15 +20,15 @@ export default class LoginBox extends Component {
                 <div className="header">Sign In</div>
                 <div className="box">
                     <div className="input-group">
-                        <label htmlFor="username">Username</label>
-                        <input type="text" name="username" placeholder="Username"/>
+                        <label htmlFor="username" className="login-label">Username</label>
+                        <input type="text" name="username" placeholder="Username" className="login-input"/>
                     </div>
                     <div className="input-group">
-                        <label htmlFor="password">Password</label>
-                        <input type="password" name="password" placeholder="Password" />
+                        <label htmlFor="password" className="login-label">Password</label>
+                        <input type="password" name="password" placeholder="Password" className="login-input"/>
                     </div>
 
-                    <button type="button" className="signIn-btn" onClick={this.submitLogin.bind(this)}>Sign In</button>
+                    <button type="button" className="login-btn" onClick={this.submitLogin.bind(this)}>Sign In</button>
                 </div>
             </div>
         )
