@@ -40,12 +40,12 @@
     padding-left: 5px;
 }
 .login-input {
-    height: 2.1em;
+    height: 1.5em;
     /* border-radius: 3px; */
     border: none;
     border-bottom: 1px solid #D60000;
     transition: border 0.4s ease-out;
-    padding: 13px;
+    padding: 10px;
     font-family: Oxygen, sans-serif;
     font-size: 19px;
     color: #3e3e42;
@@ -68,7 +68,7 @@
     color: rgba(15, 15, 15, 0.4);
 }
 .login-btn {
-    padding: 2px 30px;
+    padding: 5px 30px;
     /* background-color: #417cef; */
     border: 0;
     font-size: 18px;
