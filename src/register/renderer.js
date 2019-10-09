@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import reactDom from 'react-dom';
+import { Redirect } from 'react-router-dom'
 import './register.css';
-
+import  { PostData }  from '../services/PostData';
+import { contributorSignUpApi } from '../network/endpoint';
 
 export default class RegisterBox extends Component {
 
@@ -14,7 +16,8 @@ export default class RegisterBox extends Component {
             password: "",
             confirmPassword: "",
             errors: [],
-            pwdState: null
+            pwdState: null,
+            redirect: false
         }
     }
 
@@ -59,7 +62,7 @@ export default class RegisterBox extends Component {
     onPasswordChange(e) {
         this.setState({ password: e.target.value });
         this.clearValidationErr("password");
-
+        
         this.setState({ pwdState: "weak" });
         if (e.target.value.length > 8) {
             this.setState({ pwdState: "medium" });
@@ -70,8 +73,10 @@ export default class RegisterBox extends Component {
     }
 
     submitRegister(e) {
+        e.preventDefault();
+        
         console.log(this.state);
-
+                
         if (this.state.username == "") {
             this.showValidationErr("username", "Username Cannot be empty!");
         }
@@ -84,11 +89,30 @@ export default class RegisterBox extends Component {
         if (this.state.phone == ""){
             this.showValidationErr("phone", "Phone cannot be empty!");
         }
-
+        
+        let userData = {
+            username: this.username,
+            phone: this.phone,
+            email: this.email,
+            password: this.password
+        }
+        PostData(contributorSignUpApi, userData)
+            .then((result) => {
+                let responseJson = result;
+                if(responseJson) {
+                    localStorage.setItem('userData', responseJson);
+                    this.setState({ redirect: true })
+                }else {
+                    console.log("Error Registering User")
+                }
+            })
     }
 
     render() {
 
+        if (this.state.redirect) {
+            return (<Redirect to={'/home'} />);
+        }
         let usernameErr = null,
             passwordErr = null,
             phoneErr = null,
@@ -129,7 +153,7 @@ export default class RegisterBox extends Component {
                 <div className="header">Register</div>
                 <div className="box">
                     <div className="input-group">
-                        <label htmlFor="username" className="login-label">Name</label>
+                        <label htmlFor="username" className="login-label">Username</label>
                         <input type="text" name="username" placeholder="Username" className="login-input" onChange={this.onUsernameChange.bind(this)} />
                         <small className="danger-error">{usernameErr
                             ? usernameErr
