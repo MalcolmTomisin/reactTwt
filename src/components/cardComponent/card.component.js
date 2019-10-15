@@ -1,58 +1,146 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
-import  IosAddCircleOutline  from 'react-ionicons/lib/IosAddCircleOutline';
 import './card.styles.css';
-
-
-const iconStyle = {
-    position: 'relative',
-    right: '4px',
-    bottom: '1px',
-    fontWeight: '400',
-}
-
+import { contributorUploadApi } from '../../network/endpoint';
+import { PostData } from '../../services/PostData';
 export default class CardComponent extends React.Component {
     constructor() {
         super()
         this.state = {
-            selectFile: null
+            coordinates: "",
+            bilbordTag: "",
+            bilbordPin: "",
+            uploadFile: [],
+            errors: [],
         }
     }
-    handleFileChange = (event) => {
+    handleFileChange(event) {
         this.setState({ selectFile: event.target.files[0]})
     }
 
-    uploadFileHandler = () => {
-
+    onCoordinatesChange(e) {
+        this.setState({ coordinates: e.target.value });
+        this.clearValidationErr("coordinates");
     }
-    
+
+    onBilbordTagChange(e) {
+        this.setState({ bilbordTag: e.target.value });
+        this.clearValidationErr("bilbordTag");
+    }
+
+    onBilbordPinChange(e) {
+        this.setState({ bilbordPin: e.target.value });
+        this.clearValidationErr("bilbordPin");
+    }
+
+    showValidationErr(elm, msg) {
+        this.setState((prevState) => ({
+            errors: [
+                ...prevState.errors, {
+                    elm,
+                    msg
+                }
+            ]
+        }));
+    }
+
+    clearValidationErr(elm) {
+        this.setState((prevState) => {
+            let newArr = [];
+            for (let err of prevState.errors) {
+                if (elm != err.elm) {
+                    newArr.push(err);
+                }
+            }
+            return { errors: newArr };
+        });
+    }
+
+    submitUpload(e) {
+        e.preventDefault();
+        
+        console.log(this.state);
+        
+        let validFields = this.checkFields();
+
+        if(!validFields) {
+            let uploadData = {
+                coordinates: this.state.coordinates,
+                bilbordTag: this.state.bilbordTag,
+                bilbordPin: this.state.bilbordPin,
+                uploadFile: this.state.uploadFile
+            }
+            PostData(contributorUploadApi, uploadData)
+            .then((result) => {
+                console.log(result)
+            })
+        }
+    }
+
+    checkFields() {
+        if (this.state.coordinates === "") {
+            this.showValidationErr("coordinates", "Coordinates Cannot be empty!");
+        }
+        if (this.state.bilbordTag === "") {
+            this.showValidationErr("bilbordTag", "Bilbord Tag Cannot be empty!");
+        }
+        if (this.state.bilbordPin === "") {
+            this.showValidationErr("bilbordPin", "Bilbord Pin Cannot be empty!");
+        }
+        if (this.state.uploadFile === ""){
+            this.showValidationErr("uploadFile", "File cannot be empty!");
+        }
+    }
     render() {
+        let coordinatesErr = null,
+            bilbordTagErr = null,
+            bilbordPinErr = null,
+            uploadFileErr = null;
+
+        for (let err of this.state.errors) {
+            if (err.elm == "username") {
+                coordinatesErr = err.msg;
+            }
+            if (err.elm == "password") {
+                bilbordTagErr = err.msg;
+            }
+            if (err.elm == "email") {
+                uploadFileErr = err.msg;
+            }
+            if (err.elm == "phone") {
+                bilbordPinErr = err.msg;
+            }
+        }
         return(
-            <Card style={{ width: '30rem', height: '30rem', border: 'none', backgroundColor: '#FEDDD9' }}>
-                <div>
-                    <h1 className="center">Upload File</h1>
-                    <div>
-                        <h4 className="center">Click button to upload files</h4>
-                        
+            <div className="container">
+                <div className="header-text">
+                    Upload Image/Video and provide required information
+                </div>
+                    <div className="input-group">
+                        <label htmlFor="coordinates" className="upload-label">Coordinates</label>
+                        <input type="text" name="coordinates" placeholder="Enter coordinates" className="upload-input" onChange={this.onCoordinatesChange.bind(this)}/>
+                        <small className="danger-error">{coordinatesErr ? coordinatesErr : ""}</small>
                     </div>
-                    <input 
-                        className="input-file" 
-                        type="file" 
-                        name="selectedFile" 
-                        onChange={this.handleFileChange}
-                        ref={fileInput => this.fileInput = fileInput}
-                        multiple
-                    />            
-                    <button 
-                      className="btn btn-danger"
-                      onClick={() => this.fileInput.click()}
-                    >
-                        <IosAddCircleOutline color="#fff" fontSize="25px" style={iconStyle}/>
-                        Add Files
-                    </button>
-                    <button className="upload-button" onClick={this.uploadFileHandler}></button>
-                </div>        
-            </Card>
+                    <div className="input-group">
+                        <label htmlFor="bilbordTag" className="upload-label">Bilbord Tag</label>
+                        <input type="text" name="bilbordTag" placeholder="Enter the Bilbord Tag" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
+                        <small className="danger-error">{bilbordTagErr ? bilbordTagErr : ""}</small>
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="bilbordPin" className="upload-label">Bilbord PIN</label>
+                        <input type="text" name="bilbordPin" placeholder="Enter the Bilbord Pin" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
+                        <small className="danger-error">{bilbordPinErr ? bilbordPinErr : ""}</small>
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="uploadFile" className="upload-label">Upload image/video</label>
+                        <input type="file" name="uploadFile" placeholder="Enter the Bilbord Pin" className="span-text" onChange={this.onBilbordTagChange.bind(this)}/>
+                        <small className="danger-error">{uploadFileErr ? uploadFileErr : ""}</small>
+                    </div>
+
+                    <button type="button" className="upload-btn" onClick={this.submitLogin}>Submit Bilbord</button>
+                </div>
+            
         );
     }   
 }

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import reactDom from 'react-dom';
 import { Redirect } from 'react-router-dom';
 import { PostData } from '../services/PostData';
 import { contributorSignInApi } from '../network/endpoint';
 import './login.css';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class LoginBox extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
+            email: "",
             password: "",
             errors: [],
             redirect: false,
@@ -19,6 +19,7 @@ export default class LoginBox extends Component {
         this.submitLogin = this.submitLogin.bind(this)
     }
 
+    
     showValidationErr(elm, msg) {
         this.setState((prevState) => ({
             errors: [
@@ -42,9 +43,9 @@ export default class LoginBox extends Component {
         });
     }
 
-    onUsernameChange(e) {
-        this.setState({ username: e.target.value });
-        this.clearValidationErr("username");
+    onEmailChange(e) {
+        this.setState({ email: e.target.value });
+        this.clearValidationErr("email");
     }
 
     onPasswordChange(e) {
@@ -55,62 +56,64 @@ export default class LoginBox extends Component {
     submitLogin(e) {
         e.preventDefault();
         
-        console.log(this.state);
-
-        if (this.state.username === "" && this.state.username === undefined ) {
-            this.showValidationErr("username", "Username Cannot be empty!");
-        }
-        if (this.state.password === "" && this.state.password === undefined ) {
-            this.showValidationErr("password", "Password Cannot be empty!");
-        }    
-        
-        let userData = {
-           username: this.username,
-           password: this.password
-        }
-
-        PostData(contributorSignInApi, userData)
+        let validFields = this.checkFields();
+        if (!validFields) {
+            let userData = {
+                email: this.state.email,
+                password: this.state.password
+            }            
+            PostData(contributorSignInApi, userData)
             .then((result) => {
-                let responseJson = result;
-                
-                if(responseJson) {
-                    localStorage.setItem('userData', responseJson);
-                    console.log("Home Page");
+                console.log(result)
+                if(result.success === true) {
+                    localStorage.setItem('userData', result.token);
                     this.setState({ redirect: true })
                 }else {
-                    console.log("Login Error")
+                    console.log("Cannot login")
                 }
             })
+        }
+    }
+        
+
+    checkFields() {
+        if (this.state.email === "" ) {
+            this.showValidationErr("email", "Email Cannot be empty!");
+        }
+        if (this.state.password === "") {
+            this.showValidationErr("password", "Password Cannot be empty!");
+        }   
     }
 
+    
     render() {
-        let usernameErr = null,
+        let emailErr = null,
             passwordErr = null
 
             for (let err of this.state.errors) {
-                if (err.elm == "username") {
-                    usernameErr = err.msg;
+                if (err.elm == "email") {
+                    emailErr = err.msg;
                 }
                 if (err.elm == "password") {
                     passwordErr = err.msg;
                 }
             }
             
-        if (this.state.redirect) {
+        if (this.state.redirect === true) {
             return(<Redirect to={"/home"}/>)
         }
-
-        // if (localStorage.getItem("userData")) {
-        //     return(<Redirect to={"/home"}/>)
-        // }
+        if (localStorage.getItem("userData")) {
+            return(<Redirect to={"/home"}/>)
+        }
         return (
             <div className="inner-container">
+                
                 <div className="header">Sign In</div>
                 <div className="box">
                     <div className="input-group">
-                        <label htmlFor="username" className="login-label">Username</label>
-                        <input type="text" name="username" placeholder="Username" className="login-input" onChange={this.onUsernameChange.bind(this)}/>
-                        <small className="danger-error">{usernameErr ? usernameErr : ""}</small>
+                        <label htmlFor="email" className="login-label">Email Address</label>
+                        <input type="email" name="email" placeholder="Email Address" className="login-input" onChange={this.onEmailChange.bind(this)}/>
+                        <small className="danger-error">{emailErr ? emailErr : ""}</small>
                     </div>
                     <div className="input-group">
                         <label htmlFor="password" className="login-label">Password</label>
@@ -125,3 +128,4 @@ export default class LoginBox extends Component {
     }
 }
 
+// toast.configure();

@@ -3,7 +3,8 @@ const api = 'http://api.bilbordapp.com';
 const contributorApi = `${api}/api/contributor`;
 const contributorSignUpApi = `${contributorApi}/create`;
 const contributorSignInApi = `${contributorApi}/login`;
+const contributorUploadApi = `${contributorApi}/contribute`;
 
 export {
-    contributorSignInApi, contributorSignUpApi
+    contributorSignInApi, contributorSignUpApi, contributorUploadApi
 }
