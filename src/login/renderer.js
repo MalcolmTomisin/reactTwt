@@ -35,7 +35,7 @@ export default class LoginBox extends Component {
         this.setState((prevState) => {
             let newArr = [];
             for (let err of prevState.errors) {
-                if (elm != err.elm) {
+                if (elm !== err.elm) {
                     newArr.push(err);
                 }
             }
@@ -62,14 +62,17 @@ export default class LoginBox extends Component {
                 email: this.state.email,
                 password: this.state.password
             }            
+            console.log(userData)
             PostData(contributorSignInApi, userData)
             .then((result) => {
-                console.log(result)
-                if(result.success === true) {
-                    localStorage.setItem('userData', result.token);
+                let responseJson = result;
+
+                console.log(responseJson)
+                if(responseJson.user) {
+                    localStorage.setItem('userData', responseJson.token);
                     this.setState({ redirect: true })
                 }else {
-                    console.log("Cannot login")
+                    toast.error(responseJson.status, { autoClose: 10000 })
                 }
             })
         }
@@ -91,10 +94,10 @@ export default class LoginBox extends Component {
             passwordErr = null
 
             for (let err of this.state.errors) {
-                if (err.elm == "email") {
+                if (err.elm === "email") {
                     emailErr = err.msg;
                 }
-                if (err.elm == "password") {
+                if (err.elm === "password") {
                     passwordErr = err.msg;
                 }
             }
@@ -128,4 +131,4 @@ export default class LoginBox extends Component {
     }
 }
 
-// toast.configure();
+toast.configure();

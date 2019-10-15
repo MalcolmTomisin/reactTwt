@@ -13,8 +13,9 @@ export default class CardComponent extends React.Component {
             errors: [],
         }
     }
-    handleFileChange(event) {
-        this.setState({ selectFile: event.target.files[0]})
+    handleFileChange(e) {
+        this.setState({ uploadFile: e.target.files[0]})
+        this.clearValidationErr("uploadFile");
     }
 
     onCoordinatesChange(e) {
@@ -47,7 +48,7 @@ export default class CardComponent extends React.Component {
         this.setState((prevState) => {
             let newArr = [];
             for (let err of prevState.errors) {
-                if (elm != err.elm) {
+                if (elm !== err.elm) {
                     newArr.push(err);
                 }
             }
@@ -69,6 +70,7 @@ export default class CardComponent extends React.Component {
                 bilbordPin: this.state.bilbordPin,
                 uploadFile: this.state.uploadFile
             }
+            console.log(uploadData)
             PostData(contributorUploadApi, uploadData)
             .then((result) => {
                 console.log(result)
@@ -97,16 +99,16 @@ export default class CardComponent extends React.Component {
             uploadFileErr = null;
 
         for (let err of this.state.errors) {
-            if (err.elm == "username") {
+            if (err.elm === "username") {
                 coordinatesErr = err.msg;
             }
-            if (err.elm == "password") {
+            if (err.elm === "password") {
                 bilbordTagErr = err.msg;
             }
-            if (err.elm == "email") {
+            if (err.elm === "email") {
                 uploadFileErr = err.msg;
             }
-            if (err.elm == "phone") {
+            if (err.elm === "phone") {
                 bilbordPinErr = err.msg;
             }
         }
@@ -138,7 +140,7 @@ export default class CardComponent extends React.Component {
                         <small className="danger-error">{uploadFileErr ? uploadFileErr : ""}</small>
                     </div>
 
-                    <button type="button" className="upload-btn" onClick={this.submitLogin}>Submit Bilbord</button>
+                    <button type="button" className="upload-btn" onClick={this.submitUpload.bind(this)}>Submit Bilbord</button>
                 </div>
             
         );

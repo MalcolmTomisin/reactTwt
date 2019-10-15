@@ -3,7 +3,7 @@ import './register.css';
 import  { PostData }  from '../services/PostData';
 import { contributorSignUpApi } from '../network/endpoint';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 export default class RegisterBox extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ export default class RegisterBox extends Component {
         this.setState((prevState) => {
             let newArr = [];
             for (let err of prevState.errors) {
-                if (elm != err.elm) {
+                if (elm !== err.elm) {
                     newArr.push(err);
                 }
             }
@@ -86,12 +86,12 @@ export default class RegisterBox extends Component {
             PostData(contributorSignUpApi, userData)
             .then((result) => {
                 let responseJson = result;
-
+                
                 if(responseJson.success === true) {
-                    toast.success("User successfully registered, You can login")
+                    toast.success("User successfully registered, You can login", { autoClose: 10000 })
                     this.setState({ isLogin: true })
                 }else {
-                    toast.error(responseJson.status)
+                    toast.error(responseJson.status, { autoClose: 10000 })
                 }
             })
         }else {
@@ -100,16 +100,16 @@ export default class RegisterBox extends Component {
     }
 
     checkFields() {
-        if (this.state.name == "") {
+        if (this.state.name === "") {
             this.showValidationErr("name", "Name Cannot be empty!");
         }
-        if (this.state.email == "") {
+        if (this.state.email === "") {
             this.showValidationErr("email", "Email Cannot be empty!");
         }
-        if (this.state.password == "") {
+        if (this.state.password === "") {
             this.showValidationErr("password", "Password Cannot be empty!");
         }
-        if (this.state.phone == ""){
+        if (this.state.phone === ""){
             this.showValidationErr("phone", "Phone cannot be empty!");
         }
     }
@@ -121,16 +121,16 @@ export default class RegisterBox extends Component {
             emailErr = null;
 
         for (let err of this.state.errors) {
-            if (err.elm == "username") {
+            if (err.elm === "username") {
                 nameErr = err.msg;
             }
-            if (err.elm == "password") {
+            if (err.elm === "password") {
                 passwordErr = err.msg;
             }
-            if (err.elm == "email") {
+            if (err.elm === "email") {
                 emailErr = err.msg;
             }
-            if (err.elm == "phone") {
+            if (err.elm === "phone") {
                 phoneErr = err.msg;
             }
         }
@@ -139,12 +139,12 @@ export default class RegisterBox extends Component {
             pwdMedium = false,
             pwdStrong = false;
 
-        if (this.state.pwdState == "weak") {
+        if (this.state.pwdState === "weak") {
             pwdWeak = true;
-        } else if (this.state.pwdState == "medium") {
+        } else if (this.state.pwdState === "medium") {
             pwdWeak = true;
             pwdMedium = true;
-        } else if (this.state.pwdState == "strong") {
+        } else if (this.state.pwdState === "strong") {
             pwdWeak = true;
             pwdMedium = true;
             pwdStrong = true;

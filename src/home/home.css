@@ -1,4 +1,16 @@
 .home {
-    text-align: center;
-    
+    text-align: center;  
+}
+.logout-btn {
+    padding: 5px 30px;
+    /* background-color: #417cef; */
+    border: 0;
+    font-size: 18px;
+    border-radius: 3px;
+    font-family: Oxygen, sans-serif;
+    background-color: rgba(15, 15, 15, 0.03);
+    margin-top: 20px;
+    border: 2px solid #D60000;
+    transition: background-color 0.3s ease-out;
+    cursor: pointer;
 }

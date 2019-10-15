@@ -12,7 +12,7 @@ class Home extends Component {
         this.logout = this.logout.bind(this);
     }
 
-    UNSAFE_componentWillMount() {
+    componentDidMount() {
         if(localStorage.getItem("userData")) {
             console.log("Call user feed");
         }else {
@@ -20,7 +20,7 @@ class Home extends Component {
         }
     }
 
-    logout = () => {
+    logout() {
         localStorage.setItem("userData","");
         localStorage.clear();
         this.setState({redirect: true})
@@ -32,11 +32,12 @@ class Home extends Component {
         }
         return( 
             <div>
-                <div className="col-md-8">
-                <CardComponent />
+                <div className="col-md-1" style={{ position: "absolute", right: "100px" }}>
+                    <button type="button" className="logout-btn" onClick={this.logout}>Logout</button>
                 </div>
-                <div className="col-md-1">
-                    <button type="button" onClick={this.logout}>logout</button>
+
+                <div className="col-md-8">
+                    <CardComponent />
                 </div>
             </div>
         );
