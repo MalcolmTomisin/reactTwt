@@ -114,35 +114,38 @@ export default class CardComponent extends React.Component {
         }
         return(
             <div className="container">
-                <div className="header-text">
-                    Upload Image/Video and provide required information
+                <div className="row">
+                    <div className="col-md-12 col-sm-12 col-xs-12">
+                            <div className="header-text">
+                            Upload Image/Video and provide required information
+                        </div>
+                        <div className="input-group">
+                            <label htmlFor="coordinates" className="upload-label">Coordinates</label>
+                            <input type="text" name="coordinates" placeholder="Enter coordinates" className="upload-input" onChange={this.onCoordinatesChange.bind(this)}/>
+                            <small className="danger-error">{coordinatesErr ? coordinatesErr : ""}</small>
+                        </div>
+                        <div className="input-group">
+                            <label htmlFor="bilbordTag" className="upload-label">Bilbord Tag</label>
+                            <input type="text" name="bilbordTag" placeholder="Enter the Bilbord Tag" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
+                            <small className="danger-error">{bilbordTagErr ? bilbordTagErr : ""}</small>
+                        </div>
+
+                        <div className="input-group">
+                            <label htmlFor="bilbordPin" className="upload-label">Bilbord PIN</label>
+                            <input type="text" name="bilbordPin" placeholder="Enter the Bilbord Pin" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
+                            <small className="danger-error">{bilbordPinErr ? bilbordPinErr : ""}</small>
+                        </div>
+
+                        <div className="input-group">
+                            <label htmlFor="uploadFile" className="upload-label">Upload image/video</label>
+                            <input type="file" name="uploadFile" placeholder="Enter the Bilbord Pin" className="span-text" onChange={this.onBilbordTagChange.bind(this)}/>
+                            <small className="danger-error">{uploadFileErr ? uploadFileErr : ""}</small>
+                        </div>
+
+                        <button type="button" className="upload-btn" onClick={this.submitUpload.bind(this)}>Submit Bilbord</button>
+                    </div>
                 </div>
-                    <div className="input-group">
-                        <label htmlFor="coordinates" className="upload-label">Coordinates</label>
-                        <input type="text" name="coordinates" placeholder="Enter coordinates" className="upload-input" onChange={this.onCoordinatesChange.bind(this)}/>
-                        <small className="danger-error">{coordinatesErr ? coordinatesErr : ""}</small>
-                    </div>
-                    <div className="input-group">
-                        <label htmlFor="bilbordTag" className="upload-label">Bilbord Tag</label>
-                        <input type="text" name="bilbordTag" placeholder="Enter the Bilbord Tag" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
-                        <small className="danger-error">{bilbordTagErr ? bilbordTagErr : ""}</small>
-                    </div>
-
-                    <div className="input-group">
-                        <label htmlFor="bilbordPin" className="upload-label">Bilbord PIN</label>
-                        <input type="text" name="bilbordPin" placeholder="Enter the Bilbord Pin" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
-                        <small className="danger-error">{bilbordPinErr ? bilbordPinErr : ""}</small>
-                    </div>
-
-                    <div className="input-group">
-                        <label htmlFor="uploadFile" className="upload-label">Upload image/video</label>
-                        <input type="file" name="uploadFile" placeholder="Enter the Bilbord Pin" className="span-text" onChange={this.onBilbordTagChange.bind(this)}/>
-                        <small className="danger-error">{uploadFileErr ? uploadFileErr : ""}</small>
-                    </div>
-
-                    <button type="button" className="upload-btn" onClick={this.submitUpload.bind(this)}>Submit Bilbord</button>
-                </div>
-            
+            </div>
         );
     }   
 }

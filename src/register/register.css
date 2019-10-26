@@ -1,10 +1,13 @@
 .inner-container {
     transition: visibility 0.2s ease-out;
-    padding: 12px;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 40%;
+    position: relative;
+    margin: 0 auto;
 }
 
 
@@ -14,6 +17,9 @@
     justify-content: center;
 }
 
+.change-screen {
+    padding: 10px;
+}
 .input-group {
     display: flex;
     flex-direction: column;
@@ -90,4 +96,21 @@
 .danger-error {
     color: #e74c3c;
     font-size: 16px;
+}
+.selected-controller {
+    transition: border 0.5s ease-out;
+    border-bottom: 2px solid #D60000;
+}
+
+.controller {
+    flex: 1;
+    text-align: center;
+    height: 100%;
+    line-height: 2;
+    cursor: pointer;
+}
+
+.selected-controller {
+    transition: border 0.5s ease-out;
+    border-bottom: 2px solid #D60000;
 }

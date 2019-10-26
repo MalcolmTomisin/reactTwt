@@ -1,10 +1,14 @@
 .inner-container {
     transition: visibility 0.2s ease-out;
-    padding: 12px;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 40%;
+    position: relative;
+    margin: 0 auto;
+ 
 }
 .box {
     display: flex;
@@ -86,4 +90,8 @@
 .danger-error {
     color: #e74c3c;
     font-size: 16px;
+}
+
+.change-screen {
+    padding: 10px;
 }

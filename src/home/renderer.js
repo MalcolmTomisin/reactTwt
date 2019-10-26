@@ -30,14 +30,17 @@ class Home extends Component {
         if(this.state.redirect) {
             return (<Redirect to={"/"}/>)
         }
+        if (!localStorage.getItem("userData")) {
+            return(<Redirect to={"/"}/>)
+        }
         return( 
             <div>
-                <div className="col-md-1" style={{ position: "absolute", right: "100px" }}>
+                <div style={{ position: "absolute", right: "100px" }}>
                     <button type="button" className="logout-btn" onClick={this.logout}>Logout</button>
                 </div>
 
-                <div className="col-md-8">
-                    <CardComponent />
+                <div >
+                    <CardComponent/>
                 </div>
             </div>
         );

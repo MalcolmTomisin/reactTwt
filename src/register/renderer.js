@@ -3,7 +3,8 @@ import './register.css';
 import  { PostData }  from '../services/PostData';
 import { contributorSignUpApi } from '../network/endpoint';
 import { toast } from 'react-toastify';
-
+import { Link, Redirect } from 'react-router-dom';
+import logoBox from '../ic_home.png';
 
 export default class RegisterBox extends Component {
     constructor(props) {
@@ -16,9 +17,11 @@ export default class RegisterBox extends Component {
             confirmPassword: "",
             errors: [],
             pwdState: null,
-            isLogin: false,
+            redirect: false,
         }
     }
+
+    
 
     showValidationErr(elm, msg) {
         this.setState((prevState) => ({
@@ -88,8 +91,8 @@ export default class RegisterBox extends Component {
                 let responseJson = result;
                 
                 if(responseJson.success === true) {
-                    toast.success("User successfully registered, You can login", { autoClose: 10000 })
-                    this.setState({ isLogin: true })
+                    this.setState({ redirect: true })
+                    toast.success("User successfully registered, You can login", { autoClose: 10000 })  
                 }else {
                     toast.error(responseJson.status, { autoClose: 10000 })
                 }
@@ -121,7 +124,7 @@ export default class RegisterBox extends Component {
             emailErr = null;
 
         for (let err of this.state.errors) {
-            if (err.elm === "username") {
+            if (err.elm === "name") {
                 nameErr = err.msg;
             }
             if (err.elm === "password") {
@@ -150,8 +153,13 @@ export default class RegisterBox extends Component {
             pwdStrong = true;
         }
 
-        return (
+        if (this.state.redirect === true) {
+            return(<Redirect to={"/signin"}/>)
+        }
+
+        return (   
             <div className="inner-container">
+                <img src={logoBox} alt="Logo" width="70px"/>
                 <div className="header">Register</div>
                 <div className="box">
                     <div className="input-group">
@@ -204,6 +212,7 @@ export default class RegisterBox extends Component {
 
                     <button type="button" className="login-btn" onClick={this.submitRegister.bind(this)}>Register</button>
                 </div>
+                <p className="change-screen">Already have an account <Link style={{ color: "#D60000"}} to="/signin">Sign In</Link> </p>
             </div>
         )
     }

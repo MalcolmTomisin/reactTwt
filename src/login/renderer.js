@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { PostData } from '../services/PostData';
 import { contributorSignInApi } from '../network/endpoint';
 import './login.css';
+import logoBox from '../ic_home.png';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 export default class LoginBox extends Component {
 
@@ -110,7 +112,7 @@ export default class LoginBox extends Component {
         }
         return (
             <div className="inner-container">
-                
+                <img src={logoBox} alt="Logo" width="70px"/>
                 <div className="header">Sign In</div>
                 <div className="box">
                     <div className="input-group">
@@ -126,6 +128,9 @@ export default class LoginBox extends Component {
 
                     <button type="button" className="login-btn" onClick={this.submitLogin}>Sign In</button>
                 </div>
+
+                <span className="change-screen">You dont have an account yet <Link style={{ color: "#D60000"}} to="/register">Register</Link> </span>
+                
             </div>
         )
     }
