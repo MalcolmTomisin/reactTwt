@@ -31,7 +31,7 @@ class Home extends Component {
             return (<Redirect to={"/signin"}/>)
         }
         if (!localStorage.getItem("userData")) {
-            return(<Redirect to={"/"}/>)
+            return(<Redirect to={"/signin"}/>)
         }
         return( 
             <div>
