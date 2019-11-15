@@ -9,7 +9,7 @@
     border-radius: 3px;
     font-family: Oxygen, sans-serif;
     background-color: rgba(15, 15, 15, 0.03);
-    margin-top: 20px;
+    margin: 20px;
     border: 2px solid #D60000;
     transition: background-color 0.3s ease-out;
     cursor: pointer;
