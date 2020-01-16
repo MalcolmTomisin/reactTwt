@@ -6,11 +6,13 @@ export default class CardComponent extends React.Component {
     constructor() {
         super()
         this.state = {
+            latitude: "",
             coordinates: "",
             bilbordTag: "",
             bilbordPin: "",
             uploadFile: [],
             errors: [],
+            longitude: ""
         }
     }
     handleFileChange(e) {
@@ -21,6 +23,16 @@ export default class CardComponent extends React.Component {
     onCoordinatesChange(e) {
         this.setState({ coordinates: e.target.value });
         this.clearValidationErr("coordinates");
+    }
+
+    onLatitudeChange(e) {
+        this.setState({ latitude: e.target.value });
+        this.clearValidationErr("latitude");
+    }
+
+    onLongitudeChange(e) {
+        this.setState({ longitude: e.target.value });
+        this.clearValidationErr("longitude");
     }
 
     onBilbordTagChange(e) {
@@ -79,37 +91,45 @@ export default class CardComponent extends React.Component {
     }
 
     checkFields() {
-        if (this.state.coordinates === "") {
-            this.showValidationErr("coordinates", "Coordinates Cannot be empty!");
+        const {  bilbordTag, bilbordPin, uploadFile, latitude, longitude } = this.state;
+        if (longitude === "") {
+            this.showValidationErr("longitude", "Longitude Cannot be empty!")
         }
-        if (this.state.bilbordTag === "") {
+        if (latitude === "") {
+            this.showValidationErr("latitude", "Latitude Cannot be empty!")
+        }
+        if (bilbordTag === "") {
             this.showValidationErr("bilbordTag", "Bilbord Tag Cannot be empty!");
         }
-        if (this.state.bilbordPin === "") {
+        if (bilbordPin === "") {
             this.showValidationErr("bilbordPin", "Bilbord Pin Cannot be empty!");
         }
-        if (this.state.uploadFile === ""){
+        if (uploadFile === ""){
             this.showValidationErr("uploadFile", "File cannot be empty!");
         }
     }
     render() {
-        let coordinatesErr = null,
-            bilbordTagErr = null,
+        let bilbordTagErr = null,
             bilbordPinErr = null,
-            uploadFileErr = null;
+            uploadFileErr = null,
+            latitudeErr = null,
+            longitudeErr = null;
 
         for (let err of this.state.errors) {
-            if (err.elm === "username") {
-                coordinatesErr = err.msg;
-            }
-            if (err.elm === "password") {
+            if (err.elm === "bilbordTag") {
                 bilbordTagErr = err.msg;
             }
-            if (err.elm === "email") {
+            if (err.elm === "uploadFile") {
                 uploadFileErr = err.msg;
             }
-            if (err.elm === "phone") {
+            if (err.elm === "bilbordPin") {
                 bilbordPinErr = err.msg;
+            }
+            if (err.elm === "latitude") {
+                latitudeErr = err.msg;
+            }
+            if (err.elm === "longitude") {
+                longitudeErr = err.msg;
             }
         }
         return(
@@ -120,9 +140,14 @@ export default class CardComponent extends React.Component {
                             Upload Image/Video and provide required information
                         </div>
                         <div className="input-group">
-                            <label htmlFor="coordinates" className="upload-label">Coordinates</label>
-                            <input type="text" name="coordinates" placeholder="Enter coordinates" className="upload-input" onChange={this.onCoordinatesChange.bind(this)}/>
-                            <small className="danger-error">{coordinatesErr ? coordinatesErr : ""}</small>
+                            <label htmlFor="latitude" className="upload-label">Latitude</label>
+                            <input type="text" name="latitude" placeholder="Enter Latitude" className="upload-input" onChange={this.onCoordinatesChange.bind(this)}/>
+                            <small className="danger-error">{latitudeErr ? latitudeErr : ""}</small>
+                        </div>
+                        <div className="input-group">
+                            <label htmlFor="longitude" className="upload-label">Longitude</label>
+                            <input type="text" name="longitude" placeholder="Enter Longitude" className="upload-input" onChange={this.onCoordinatesChange.bind(this)} />
+                            <small className="danger-error">{longitudeErr ? longitudeErr : ""}</small>
                         </div>
                         <div className="input-group">
                             <label htmlFor="bilbordTag" className="upload-label">Bilbord Tag</label>
