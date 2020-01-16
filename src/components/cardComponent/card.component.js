@@ -1,7 +1,10 @@
 import React from 'react';
 import './card.styles.css';
 import { contributorUploadApi } from '../../network/endpoint';
-import { PostData } from '../../services/PostData';
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default class CardComponent extends React.Component {
     constructor() {
         super()
@@ -12,7 +15,8 @@ export default class CardComponent extends React.Component {
             bilbordPin: "",
             uploadFile: [],
             errors: [],
-            longitude: ""
+            longitude: "",
+            isLoading: false
         }
     }
     handleFileChange(e) {
@@ -75,18 +79,41 @@ export default class CardComponent extends React.Component {
         
         let validFields = this.checkFields();
 
-        if(!validFields) {
+        if (validFields) {
+            this.setState({ isLoading: false });
+            let formData = new FormData();
             let uploadData = {
                 coordinates: this.state.coordinates,
                 bilbordTag: this.state.bilbordTag,
                 bilbordPin: this.state.bilbordPin,
                 uploadFile: this.state.uploadFile
             }
-            console.log(uploadData)
-            PostData(contributorUploadApi, uploadData)
-            .then((result) => {
-                console.log(result)
+            for (let key in uploadData) {
+                formData.append(key, uploadData[key])
+                console.log(uploadData[key])
+            }
+
+            fetch(contributorUploadApi, {
+                method: 'POST',
+                headers: {
+                    'token': localStorage.getItem("userData"),
+                    'Content-Type': 'multipart/form-data'
+                },
+                body: formData
             })
+                .then(res => res.json())
+                .then(res => {
+                    res.success
+                      ? toast.success(res.status, { autoClose: 6000 })
+                      : toast.error(res.status, { autoClose: 10000 });
+                })
+                .catch(err => {
+                    console.log(err)
+                    toast.error('Error',{autoClose: 3000})
+                })
+            .finally(() => this.setState({isLoading: false}))
+        } else {
+            toast.error('Invalid fields', {autoClose: 3000})
         }
     }
 
@@ -94,21 +121,28 @@ export default class CardComponent extends React.Component {
         const {  bilbordTag, bilbordPin, uploadFile, latitude, longitude } = this.state;
         if (longitude === "") {
             this.showValidationErr("longitude", "Longitude Cannot be empty!")
+            return false;
         }
         if (latitude === "") {
             this.showValidationErr("latitude", "Latitude Cannot be empty!")
+            return false;
         }
         if (bilbordTag === "") {
             this.showValidationErr("bilbordTag", "Bilbord Tag Cannot be empty!");
+            return false;
         }
         if (bilbordPin === "") {
             this.showValidationErr("bilbordPin", "Bilbord Pin Cannot be empty!");
+            return false;
         }
         if (uploadFile === ""){
             this.showValidationErr("uploadFile", "File cannot be empty!");
+            return false;
         }
+        return true;
     }
     render() {
+        const { isLoading } = this.state;
         let bilbordTagErr = null,
             bilbordPinErr = null,
             uploadFileErr = null,
@@ -131,6 +165,11 @@ export default class CardComponent extends React.Component {
             if (err.elm === "longitude") {
                 longitudeErr = err.msg;
             }
+        }
+        if (isLoading) {
+            return (
+              <Loader type="Circles" color="#D60000" height={80} width={80} />
+            );
         }
         return(
             <div className="container">
@@ -174,3 +213,5 @@ export default class CardComponent extends React.Component {
         );
     }   
 }
+
+toast.configure();
