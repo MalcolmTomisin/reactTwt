@@ -105,10 +105,10 @@ export default class LoginBox extends Component {
             }
             
         if (this.state.redirect === true) {
-            return(<Redirect to={"/home"}/>)
+            return(<Redirect to={"/"}/>)
         }
         if (localStorage.getItem("userData")) {
-            return(<Redirect to={"/home"}/>)
+            return(<Redirect to={"/"}/>)
         }
         return (
             <div className="inner-container">
