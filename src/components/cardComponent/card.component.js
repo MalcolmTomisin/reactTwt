@@ -71,8 +71,8 @@ export default class CardComponent extends React.Component {
             this.setState({ isLoading: true });
             let formData = new FormData();
             let uploadData = {
-                latitude: this.state.latitude,
-                longitude: this.state.longitude,
+                latitude: parseFloat(this.state.latitude),
+                longitude: parseFloat(this.state.longitude),
                 faceTag: this.state.bilbordTag,
                 image: this.state.uploadFile
             }
