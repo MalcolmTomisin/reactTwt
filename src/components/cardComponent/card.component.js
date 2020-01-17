@@ -10,9 +10,7 @@ export default class CardComponent extends React.Component {
         super()
         this.state = {
             latitude: "",
-            coordinates: "",
             bilbordTag: "",
-            bilbordPin: "",
             uploadFile: [],
             errors: [],
             longitude: "",
@@ -22,11 +20,6 @@ export default class CardComponent extends React.Component {
     handleFileChange(e) {
         this.setState({ uploadFile: e.target.files[0]})
         this.clearValidationErr("uploadFile");
-    }
-
-    onCoordinatesChange(e) {
-        this.setState({ coordinates: e.target.value });
-        this.clearValidationErr("coordinates");
     }
 
     onLatitudeChange(e) {
@@ -42,11 +35,6 @@ export default class CardComponent extends React.Component {
     onBilbordTagChange(e) {
         this.setState({ bilbordTag: e.target.value });
         this.clearValidationErr("bilbordTag");
-    }
-
-    onBilbordPinChange(e) {
-        this.setState({ bilbordPin: e.target.value });
-        this.clearValidationErr("bilbordPin");
     }
 
     showValidationErr(elm, msg) {
@@ -80,13 +68,13 @@ export default class CardComponent extends React.Component {
         let validFields = this.checkFields();
 
         if (validFields) {
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: true });
             let formData = new FormData();
             let uploadData = {
-                coordinates: this.state.coordinates,
-                bilbordTag: this.state.bilbordTag,
-                bilbordPin: this.state.bilbordPin,
-                uploadFile: this.state.uploadFile
+                latitude: this.state.latitude,
+                longitude: this.state.longitude,
+                faceTag: this.state.bilbordTag,
+                image: this.state.uploadFile
             }
             for (let key in uploadData) {
                 formData.append(key, uploadData[key])
@@ -118,7 +106,7 @@ export default class CardComponent extends React.Component {
     }
 
     checkFields() {
-        const {  bilbordTag, bilbordPin, uploadFile, latitude, longitude } = this.state;
+        const {  bilbordTag, uploadFile, latitude, longitude } = this.state;
         if (longitude === "") {
             this.showValidationErr("longitude", "Longitude Cannot be empty!")
             return false;
@@ -131,10 +119,6 @@ export default class CardComponent extends React.Component {
             this.showValidationErr("bilbordTag", "Bilbord Tag Cannot be empty!");
             return false;
         }
-        if (bilbordPin === "") {
-            this.showValidationErr("bilbordPin", "Bilbord Pin Cannot be empty!");
-            return false;
-        }
         if (uploadFile === ""){
             this.showValidationErr("uploadFile", "File cannot be empty!");
             return false;
@@ -144,7 +128,6 @@ export default class CardComponent extends React.Component {
     render() {
         const { isLoading } = this.state;
         let bilbordTagErr = null,
-            bilbordPinErr = null,
             uploadFileErr = null,
             latitudeErr = null,
             longitudeErr = null;
@@ -155,9 +138,6 @@ export default class CardComponent extends React.Component {
             }
             if (err.elm === "uploadFile") {
                 uploadFileErr = err.msg;
-            }
-            if (err.elm === "bilbordPin") {
-                bilbordPinErr = err.msg;
             }
             if (err.elm === "latitude") {
                 latitudeErr = err.msg;
@@ -192,12 +172,6 @@ export default class CardComponent extends React.Component {
                             <label htmlFor="bilbordTag" className="upload-label">Bilbord Tag</label>
                             <input type="text" name="bilbordTag" placeholder="Enter the Bilbord Tag" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
                             <small className="danger-error">{bilbordTagErr ? bilbordTagErr : ""}</small>
-                        </div>
-
-                        <div className="input-group">
-                            <label htmlFor="bilbordPin" className="upload-label">Bilbord PIN</label>
-                            <input type="text" name="bilbordPin" placeholder="Enter the Bilbord Pin" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
-                            <small className="danger-error">{bilbordPinErr ? bilbordPinErr : ""}</small>
                         </div>
 
                         <div className="input-group">
