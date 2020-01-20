@@ -160,12 +160,12 @@ export default class CardComponent extends React.Component {
                         </div>
                         <div className="input-group">
                             <label htmlFor="latitude" className="upload-label">Latitude</label>
-                            <input type="text" name="latitude" placeholder="Enter Latitude" className="upload-input" onChange={this.onCoordinatesChange.bind(this)}/>
+                            <input type="text" name="latitude" placeholder="Enter Latitude" className="upload-input" onChange={this.onLatitudeChange.bind(this)}/>
                             <small className="danger-error">{latitudeErr ? latitudeErr : ""}</small>
                         </div>
                         <div className="input-group">
                             <label htmlFor="longitude" className="upload-label">Longitude</label>
-                            <input type="text" name="longitude" placeholder="Enter Longitude" className="upload-input" onChange={this.onCoordinatesChange.bind(this)} />
+                            <input type="text" name="longitude" placeholder="Enter Longitude" className="upload-input" onChange={this.onLongitudeChange.bind(this)} />
                             <small className="danger-error">{longitudeErr ? longitudeErr : ""}</small>
                         </div>
                         <div className="input-group">

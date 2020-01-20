@@ -12,7 +12,7 @@ export default class App extends Component {
             <BrowserRouter>
                 <Route path='/signin' exact component={LoginBox}/>
                 <Route path="/register" exact component={RegisterBox} />
-                <Route path="" component={Home} />
+                <Route path="/" component={Home} />
             </BrowserRouter>
         );
     }
