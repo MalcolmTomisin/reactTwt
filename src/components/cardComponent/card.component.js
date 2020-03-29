@@ -11,14 +11,15 @@ export default class CardComponent extends React.Component {
         this.state = {
             latitude: "",
             bilbordTag: "",
-            uploadFile: [],
+            file: [],
             errors: [],
             longitude: "",
             isLoading: false
         }
     }
     handleFileChange(e) {
-        this.setState({ uploadFile: e.target.files[0]})
+        this.setState({ file: e.target.files[0] })
+        //console.log('file', e.target.files[0])
         this.clearValidationErr("uploadFile");
     }
 
@@ -74,7 +75,8 @@ export default class CardComponent extends React.Component {
                 latitude: parseFloat(this.state.latitude),
                 longitude: parseFloat(this.state.longitude),
                 faceTag: this.state.bilbordTag,
-                image: this.state.uploadFile
+                image: this.state.file.name,
+                images: this.state.file
             }
             for (let key in uploadData) {
                 formData.append(key, uploadData[key])
@@ -84,8 +86,7 @@ export default class CardComponent extends React.Component {
             fetch(contributorUploadApi, {
                 method: 'POST',
                 headers: {
-                    'token': localStorage.getItem("userData"),
-                    'Content-Type': 'multipart/form-data'
+                    'token': localStorage.getItem("userData")
                 },
                 body: formData
             })
@@ -106,7 +107,7 @@ export default class CardComponent extends React.Component {
     }
 
     checkFields() {
-        const {  bilbordTag, uploadFile, latitude, longitude } = this.state;
+        const {  bilbordTag, file, latitude, longitude } = this.state;
         if (longitude === "") {
             this.showValidationErr("longitude", "Longitude Cannot be empty!")
             return false;
@@ -119,7 +120,7 @@ export default class CardComponent extends React.Component {
             this.showValidationErr("bilbordTag", "Bilbord Tag Cannot be empty!");
             return false;
         }
-        if (uploadFile === ""){
+        if (file === ""){
             this.showValidationErr("uploadFile", "File cannot be empty!");
             return false;
         }
@@ -175,8 +176,8 @@ export default class CardComponent extends React.Component {
                         </div>
 
                         <div className="input-group">
-                            <label htmlFor="uploadFile" className="upload-label">Upload image/video</label>
-                            <input type="file" name="uploadFile" placeholder="Enter the Bilbord Pin" className="span-text" onChange={this.onBilbordTagChange.bind(this)}/>
+                            <label htmlFor="images" className="upload-label">Upload image/video</label>
+                            <input type="file" name="images" placeholder="Enter the Bilbord Pin" className="span-text" onChange={this.handleFileChange.bind(this)}/>
                             <small className="danger-error">{uploadFileErr ? uploadFileErr : ""}</small>
                         </div>
 
