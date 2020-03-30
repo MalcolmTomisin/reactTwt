@@ -37,7 +37,7 @@ export default class Contribute extends Component{
                         <input type="text" name="bilbord-pin" placeholder="Enter the Bilbord Pin" className="login-input" />
                     </div>
 
-                    <button type="button" className="login-btn" onClick={}>Submit Bilbord</button>
+                    <button type="button" className="login-btn" onClick={()=> {}}>Submit Bilbord</button>
                 </div>
             </div>
         )
