@@ -69,7 +69,7 @@ export default class LoginBox extends Component {
             .then((result) => {
                 let responseJson = result;
 
-                console.log(responseJson)
+                console.log('res',responseJson)
                 if(responseJson.user) {
                     localStorage.setItem('userData', responseJson.token);
                     this.setState({ redirect: true })
