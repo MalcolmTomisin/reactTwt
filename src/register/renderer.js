@@ -89,7 +89,7 @@ export default class RegisterBox extends Component {
                   Accept: "application/json",
                   "Content-Type": "application/json",
                   },
-                body: JSON.stringify({userData})
+                body: JSON.stringify(userData)
               }
             ).then(res => res.json())
                 .then((result) => {
