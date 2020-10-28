@@ -81,10 +81,18 @@ export default class RegisterBox extends Component {
                 password: this.state.password
             }
 
-            PostData(
+            fetch(
               "https://nodetwt-ihossamalbraak686393.codeanyapp.com/users/create",
-              userData
-            ).then((result) => {
+              {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  },
+                body: JSON.stringify({userData})
+              }
+            ).then(res => res.json())
+                .then((result) => {
               if (result.success) {
                 this.setState({ redirect: true });
                 toast.success("Welcome", {
