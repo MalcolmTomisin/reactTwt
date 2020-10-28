@@ -3,6 +3,7 @@ export function PostData(postUrl = '', userData ) {
     return new Promise((resolve, reject) => {
         fetch(postUrl, {
             method: 'POST',
+            mode: "no-cors",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

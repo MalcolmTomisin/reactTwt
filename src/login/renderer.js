@@ -65,18 +65,34 @@ export default class LoginBox extends Component {
                 password: this.state.password
             }            
             console.log(userData)
-            PostData(contributorSignInApi, userData)
-            .then((result) => {
-                let responseJson = result;
-
-                console.log('res',responseJson)
-                if(responseJson.user) {
-                    localStorage.setItem('userData', responseJson.token);
-                    this.setState({ redirect: true })
-                }else {
-                    toast.error(responseJson.status, { autoClose: 10000 })
+            fetch(
+              "https://nodetwt-ihossamalbraak686393.codeanyapp.com/users/login",
+              {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userData),
+              }
+            )
+              .then((res) => res.json())
+              .then((result) => {
+                console.log("res", result);
+                if (result.user) {
+                  toast.success("", {
+                    autoClose: 10000,
+                  });
+                  localStorage.setItem("userData", result.token);
+                  localStorage.setItem(
+                    "userId",
+                    JSON.stringify(result.user.id)
+                  );
+                  this.setState({ redirect: true });
+                } else {
+                  toast.error(result.status, { autoClose: 10000 });
                 }
-            })
+              });
         }
     }
         

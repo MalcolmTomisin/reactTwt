@@ -14,8 +14,81 @@ export default class CardComponent extends React.Component {
             file: [],
             errors: [],
             longitude: "",
-            isLoading: false
+            isLoading: false,
+            tweets: [],
+            showComment: false,
+            token: null,
+            comments: [],
+            newComment: "",
+            likes: [],
+            userId: null
         }
+        this.handleComment = this.handleComment.bind(this);
+        this.submitComment = this.submitComment.bind(this);
+        this.fetchComment = this.fetchComment.bind(this);
+    }
+
+    fetchComment() {
+        this.setState({ isLoading: true });
+        let token = localStorage.getItem("userData");
+        fetch(
+          "https://nodetwt-ihossamalbraak686393.codeanyapp.com/tweets/list/1",
+          {
+            headers: {
+              token,
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.success) {
+              this.setState({ tweets: res.tweets });
+            }
+          })
+          .catch((e) => console.error(e))
+          .finally(() => {
+            this.setState({
+              isLoading: false,
+              token,
+              likes: new Array(this.state.tweets.length),
+            });
+          });
+    }
+    componentDidMount() {
+        let userId = localStorage.getItem("userId");
+        this.setState({ userId: JSON.parse(userId) });
+        this.fetchComment();
+    }
+    handleComment(e) {
+        this.setState({ newComment: e.target.value });
+    }
+    submitComment(e, id) {
+        let { token, newComment } = this.state;
+        e.preventDefault();
+        let obj = {
+                content: newComment,
+                tweetId: id 
+        }
+        console.log("content", obj.content)
+        fetch(
+          "https://nodetwt-ihossamalbraak686393.codeanyapp.com/comments/create",
+          {
+            method: "POST",
+            headers: {
+              token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(obj),
+          }
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.success) {
+              alert("Successful");
+              this.onClickComment(id);
+            }
+          })
+          .catch(console.error);
     }
     handleFileChange(e) {
         this.setState({ file: e.target.files[0] })
@@ -47,6 +120,75 @@ export default class CardComponent extends React.Component {
                 }
             ]
         }));
+    }
+
+    onClickComment = (id) => {
+        let { token } = this.state;
+        fetch(
+          `https://nodetwt-ihossamalbraak686393.codeanyapp.com/comments/list/${id}`,
+          {
+            headers: {
+              token,
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.success) {
+              this.setState({ comments: res.comments, showComment: true });
+            }
+          })
+          .catch(console.error);
+        
+    }
+    onLikeTweet = (id) => {
+        let { tweets, userId, token } = this.state;
+        for (let favs in tweets[id - 1].favourites) {
+            if (userId === favs.userId) {
+                return fetch(
+                  "https://nodetwt-ihossamalbraak686393.codeanyapp.com/tweets/like",
+                  {
+                    method: "POST",
+                    headers: {
+                      token,
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      favourite: !favs.like,
+                      tweetId: favs.tweetId,
+                    }),
+                  }
+                )
+                  .then((res) => res.json())
+                  .then((res) => {
+                    if (res.success) {
+                      alert(favs.like ? "Unliked" : "Liked");
+                      this.fetchComment();
+                    }
+                  });
+           }
+        }
+        return fetch(
+          "https://nodetwt-ihossamalbraak686393.codeanyapp.com/tweets/like",
+          {
+            method: "POST",
+            headers: {
+              token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              favourite: true,
+              tweetId: id,
+            }),
+          }
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.success) {
+              alert("Liked");
+              this.fetchComment();
+            }
+          });
     }
 
     clearValidationErr(elm) {
@@ -127,7 +269,7 @@ export default class CardComponent extends React.Component {
         return true;
     }
     render() {
-        const { isLoading } = this.state;
+        const { isLoading, tweets, showComment, comments } = this.state;
         let bilbordTagErr = null,
             uploadFileErr = null,
             latitudeErr = null,
@@ -156,32 +298,47 @@ export default class CardComponent extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-md-12 col-sm-12 col-xs-12">
-                            <div className="header-text">
-                            Upload Image/Video and provide required information
-                        </div>
-                        <div className="input-group">
-                            <label htmlFor="latitude" className="upload-label">Latitude</label>
-                            <input type="text" name="latitude" placeholder="Enter Latitude" className="upload-input" onChange={this.onLatitudeChange.bind(this)}/>
-                            <small className="danger-error">{latitudeErr ? latitudeErr : ""}</small>
-                        </div>
-                        <div className="input-group">
-                            <label htmlFor="longitude" className="upload-label">Longitude</label>
-                            <input type="text" name="longitude" placeholder="Enter Longitude" className="upload-input" onChange={this.onLongitudeChange.bind(this)} />
-                            <small className="danger-error">{longitudeErr ? longitudeErr : ""}</small>
-                        </div>
-                        <div className="input-group">
-                            <label htmlFor="bilbordTag" className="upload-label">Bilbord Tag</label>
-                            <input type="text" name="bilbordTag" placeholder="Enter the Bilbord Tag" className="upload-input" onChange={this.onBilbordTagChange.bind(this)}/>
-                            <small className="danger-error">{bilbordTagErr ? bilbordTagErr : ""}</small>
-                        </div>
-
-                        <div className="input-group">
-                            <label htmlFor="images" className="upload-label">Upload image/video</label>
-                            <input type="file" name="images" placeholder="Enter the Bilbord Pin" className="span-text" onChange={this.handleFileChange.bind(this)}/>
-                            <small className="danger-error">{uploadFileErr ? uploadFileErr : ""}</small>
-                        </div>
-
-                        <button type="button" className="upload-btn" onClick={this.submitUpload.bind(this)}>Submit Bilbord</button>
+                        {tweets.map((v, i) => {
+                            return (
+                              <div key={i}>
+                                <img />
+                                <div>
+                                  <h4>{v.user.name}</h4>
+                                  <p>{v.content}</p>
+                                </div>
+                                    <div onClick={() => this.onClickComment(v.id)}>comments: {v.comments.length}</div>
+                                    <div onClick={() => this.onLikeTweet(v.id)}>Likes: {v.favourites.length} </div>
+                                {showComment &&
+                                  comments.map((val, id) => {
+                                    return (
+                                      <div key={id}>
+                                        <h6>{val.user.name}</h6>
+                                        <p>{val.content}</p>
+                                      </div>
+                                    );
+                                  })}
+                                {showComment && (
+                                  <div>
+                                    <textarea
+                                      name="textarea"
+                                      rows="5"
+                                      cols="30"
+                                      minLength="10"
+                                                maxLength="20"
+                                                value={this.state.newComment}
+                                      placeholder="Comment"
+                                      onChange={this.handleComment}
+                                    />
+                                    <button
+                                      type="button"
+                                                className="login-btn"
+                                                onClick={(e) => this.submitComment(e,v.id)}
+                                    >Comment</button>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                            })}
                     </div>
                 </div>
             </div>

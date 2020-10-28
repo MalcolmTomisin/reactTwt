@@ -76,30 +76,25 @@ export default class RegisterBox extends Component {
 
     submitRegister(e) {
         e.preventDefault();
-        let validFields = this.checkFields();
-
-        if(!validFields) {
             let userData = {
-                name: this.state.name,
-                phone: this.state.phone,
                 email: this.state.email,
                 password: this.state.password
             }
 
-            PostData(contributorSignUpApi, userData)
-            .then((result) => {
-                let responseJson = result;
-                
-                if(responseJson.success === true) {
-                    this.setState({ redirect: true })
-                    toast.success("User successfully registered, You can login", { autoClose: 10000 })  
-                }else {
-                    toast.error(responseJson.status, { autoClose: 10000 })
-                }
-            })
-        }else {
-            console.log("cannot register")
-        } 
+            PostData(
+              "https://nodetwt-ihossamalbraak686393.codeanyapp.com/users/create",
+              userData
+            ).then((result) => {
+              if (result.success) {
+                this.setState({ redirect: true });
+                toast.success("Welcome", {
+                  autoClose: 10000,
+                });
+              } else {
+                toast.error(result.status, { autoClose: 10000 });
+              }
+            });
+        
     }
 
     checkFields() {
@@ -162,20 +157,6 @@ export default class RegisterBox extends Component {
                 <img src={logoBox} alt="Logo" width="70px"/>
                 <div className="header">Register</div>
                 <div className="box">
-                    <div className="input-group">
-                        <label htmlFor="name" className="login-label">Name</label>
-                        <input type="text" name="name" placeholder="Name" className="login-input" onChange={this.onNameChange.bind(this)} />
-                        <small className="danger-error">{nameErr
-                            ? nameErr
-                            : ""}</small>
-                    </div>
-                    <div className="input-group">
-                        <label htmlFor="phone" className="login-label">Phone</label>
-                        <input type="phone" name="phone" placeholder="080xxxxxxxx" className="login-input" onChange={this.onPhoneChange.bind(this)} />
-                        <small className="danger-error">{phoneErr
-                            ? phoneErr
-                            : ""}</small>
-                    </div>
                     <div className="input-group">
                         <label htmlFor="email" className="login-label">Email</label>
                         <input type="email" name="email" placeholder="yourmail@mail.com" className="login-input" onChange={this.onEmailChange.bind(this)} />
